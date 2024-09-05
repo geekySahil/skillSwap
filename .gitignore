@@ -1,0 +1,21 @@
+# Ignore all .env files for both client and server
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Client-side .env files
+/client/.env
+/client/.env.local
+/client/.env.development
+/client/.env.production
+/client/.env.test
+
+# Ignore node_modules directories
+node_modules
+/client/node_modules
+
+# (Optional) Ignore build directories if you have them
+/build
+/client/build
