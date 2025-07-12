@@ -22,7 +22,6 @@ export const fetchWithAuth = async (url, options = {}, dispatch) => {
             const refreshResponse = await refreshToken();
             console.log('refreshResponse', refreshResponse)
             if (!refreshResponse.ok) {
-                console.log('truke')
 
                 toggleReauthenticationRequired(dispatch)
                 // handleTokenExpiration(dispatch) // Handle case where both access and refresh tokens are expired
@@ -43,7 +42,7 @@ export const fetchWithAuth = async (url, options = {}, dispatch) => {
 };
 
 export const refreshToken = async () => {
-    return await fetch('http://localhost:4000/api/v1/user/refresh', {
+    return await fetch(`${import.meta.env.VITE_API_URI}/api/v1/user/refresh`, {
         method: 'POST',
         credentials: 'include',  // Send the HttpOnly refresh token with the request
     });

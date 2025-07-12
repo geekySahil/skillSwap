@@ -24,6 +24,8 @@ const MateDetails = () => {
     const [showModal, setShowModal] = useState(false);
     const socket = useSocket()
 
+    console.log('MATE.MEETINGS', mate.meetings)
+
  
     
   const formattedTime = (timestamp) => {
@@ -50,14 +52,14 @@ const MateDetails = () => {
     return timeString;
   };
 
+
   const note = `Meeting scheduled at ${formattedTime(new Date())} by ${currentUser.username}`
 
 
 
     const getAllMeetings = async () => {
-        // console.log('mateId', mateId)
         try {
-            const res = await fetchWithAuth(`http://localhost:4000/api/v1/mates/meetings/${mateId}`, {
+            const res = await fetchWithAuth(`${import.meta.env.VITE_API_URI}/api/v1/mates/meetings/${mateId}`, {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json'
@@ -74,19 +76,17 @@ const MateDetails = () => {
                 return
             }
 
-            // console.log(result.data)
 
             dispatch(getMeetings({meetings: result.data, mateId: mateId})); 
 
         } catch (error) {
-            console.log(error)
             dispatch(failureForMate(error.message))
         }
     }
 
     const saveNotifications = async(message) => {
         try {
-            const res = await fetchWithAuth(`http://localhost:4000/api/v1/notifications/set-notification`, {
+            const res = await fetchWithAuth(`${import.meta.env.VITE_API_URI}/api/v1/notifications/set-notification`, {
                 method: 'PUT',
                 headers:{
                    'Content-Type':'application/json'
@@ -96,7 +96,6 @@ const MateDetails = () => {
             },dispatch)
     
             const result = await res.json() 
-            console.log(result);
         } catch (error) {
           console.log(error.message)
         }
@@ -110,9 +109,8 @@ const MateDetails = () => {
 
 
         const {topic, time} = data;
-        // console.log('topic', topic, 'time', time)
         try {
-            const res = await fetchWithAuth(`http://localhost:4000/api/v1/mates/set-meeting/${mate._id}`, {
+            const res = await fetchWithAuth(`${import.meta.env.VITE_API_URI}/api/v1/mates/set-meeting/${mate._id}`, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json'
@@ -124,15 +122,13 @@ const MateDetails = () => {
             
 
             const result = await res.json();
-            console.log(result.data);
+            console.log(result.data, 'MEETINGS');
 
             if(result.statusCode !== 200){
                 dispatch(failureForMate(result.message))
             }
             dispatch(setMeetingToState({meeting:result.data, mateId : mate._id}))
-            console.log('MEETING SET SUCCDSSFULLY')
             // await saveNotifications(`Meeting scheduled at ${formattedTime(result.data.time)} by ${currentUser.username}`)
-            console.log('socket id ', socket.id)
             socket.emit('notification', {type: 'scheduled_meeting',from: currentUser._id, to:mate.user._id, note })
         } catch (error) {
             dispatch(failureForMate(error.message))
@@ -174,7 +170,7 @@ const MateDetails = () => {
        try {
         console.log('meeting id', meetingId)
 
-         const res = await fetchWithAuth(`http://localhost:4000/api/v1/mates/cancel-meeting/${mate._id}`, {
+         const res = await fetchWithAuth(`${import.meta.env.VITE_API_URI}/api/v1/mates/cancel-meeting/${mate._id}`, {
              method: 'DELETE',
              headers: {
                 'Content-Type': 'application/json'
@@ -183,7 +179,6 @@ const MateDetails = () => {
              credentials:'include'
     }, dispatch)
 
-    console.log('done')
 
  
          const result = await res.json()

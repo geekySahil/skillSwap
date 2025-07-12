@@ -114,7 +114,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/v1/user/logout", {
+      const res = await fetch(`${import.meta.env.VITE_API_URI}/api/v1/user/logout`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -161,14 +161,12 @@ const Header = () => {
   if(path.startsWith('/videoCall')) return null
 
   return (
-    <div className={`fixed w-full bg-gradient-to-r from-cyan-700 via-cyan-500 to-slate-600 text-white p-4 flex items-center justify-between shadow-lg z-50`}>
+    <div className={`fixed w-full bg-gradient-to-r from-cyan-900 via-cyan-500 to-slate-600 text-white p-4 flex items-center justify-between shadow-lg z-50`}>
       <div className="flex items-center">
         <button onClick={toggleMenu} className="mr-4 focus:outline-none">
           {isOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
         </button>
-        <span className="font-serif">Skills</span>
-        <span className="text-3xl"><GiSwapBag /></span>
-        <span className="font-serif">Swap</span>
+        <h3 className="font-bold text-2xl font-serif"><span className="font-extrabold">{"<"}</span>SkillSwap<span className="font-extrabold">{"/>"}</span></h3>
       </div>
          
           {currentUser? <div key = {Date.now()} className="ml-auto pr-2">
@@ -259,7 +257,7 @@ const Header = () => {
                   <li>
                     <Link onClick= {toggleMenu} to="/mates" className="flex items-center px-4 py-2 text-white hover:text-gray-300 transition-colors duration-200">
                       <FiCircle className="w-3 h-3 mr-2" />
-                      Mates
+                      Learning Mates
                     </Link>
                   </li>
                 </ul>

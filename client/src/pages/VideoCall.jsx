@@ -33,7 +33,7 @@ function VideoCall() {
     setAudioMutedStream([myStream]);
   }, [myStream, remoteStream]);
 
-  console.log('myStreamRef.current', myStream)
+  // console.log('myStreamRef.current', myStream)
 
   useEffect(() => {
     if (myStream && !toggleJoin) {
@@ -43,7 +43,7 @@ function VideoCall() {
 
   const clearMeeting = async () => {
     try {
-      const res = await fetchWithAuth(`http://localhost:4000/api/v1/mates/cancel-meeting/${mateId}`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_API_URI}/api/v1/mates/cancel-meeting/${mateId}`, {
        method: 'DELETE',
        headers: {
           'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ function VideoCall() {
   });
 
   const handleUserLeft = ({ from }) => {
-    console.log(`${from} left the meeting`);
+    // console.log(`${from} left the meeting`);
 
     setLeaveConfirmation(true);
   };
@@ -79,41 +79,51 @@ function VideoCall() {
 
    
   const handleCallUser = useCallback(async () => {
+    console.log('HANDLE CALL USER TRIGGERED')
     if (myStream) {
       setToggleJoin(!toggleJoin);
       return;
     }
     setToggleJoin(!toggleJoin);
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
-
-    setMyStream(stream);
-
-    const offer = await peer.getOffer();
-    socket.emit('user:call', { to: remoteSocketId, offer });
+   try {
+     const stream = await navigator.mediaDevices.getUserMedia({
+       audio: true,
+       video: true,
+     });
+ 
+     setMyStream(stream);
+ 
+     const offer = await peer.getOffer();
+     console.log(offer, 'OFFER')
+     socket.emit('user:call', { to: remoteSocketId, offer });
+   } catch (error) {
+    console.log('ERROR HANDLE CALL USER ', error)
+   }
   }, [socket, remoteSocketId]);
 
   const handleIncomingCall = useCallback(async ({ from, offer }) => {
     dispatch(setRemoteSocketId(from));
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
-
-    setMyStream(stream);
-    const answer = await peer.getAnswer(offer);
-
-    socket.emit('call:accepted', { answer, to: from });
-  }, [socket]);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
+  
+      setMyStream(stream);
+      const answer = await peer.getAnswer(offer);
+  
+      socket.emit('call:accepted', { answer, to: from });
+    } catch (error) {
+      console.log('ERRROR', error)
+    }
+  }, []);
 
   const sendStreams = useCallback(async () => {
     if (streamsSentRef.current) return;
 
     for (const track of myStreamRef.current.getTracks()) {
       peer.peer.addTrack(track, myStreamRef.current);
-      console.log('track event triggered ')
+      // console.log('track event triggered ')
     }
 
     streamsSentRef.current = true;
@@ -292,10 +302,10 @@ function VideoCall() {
   }, [socket, handleUserJoined, handleIncomingCall, handleAcceptCall]);
 
   console.log('remotesocket id ', remoteSocketId)
-  console.log('remoteStream', remoteStream)
-  console.log('myStream', myStream)
-  console.log('peer.peer', peer.peer?.remoteDescription)
-  console.log('toggle join', toggleJoin)
+  // console.log('remoteStream', remoteStream)
+  // console.log('myStream', myStream)
+  // console.log('peer.peer', peer.peer?.remoteDescription)
+  // console.log('toggle join', toggleJoin)
 
 
   if (!toggleJoin) {
