@@ -17,9 +17,9 @@ export default defineConfig({
       // Add more polyfills if needed
     }
   },
-  root: 'client',
+  root: '.',
   build: {
-     
+     outDir: 'dist',
     rollupOptions: {
       input: 'client/index.html',
       plugins: [
