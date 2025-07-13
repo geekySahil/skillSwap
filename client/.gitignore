@@ -8,9 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
-client
+# dist
+# dist-ssr
+# client
 *.local
 
 # Editor directories and files
