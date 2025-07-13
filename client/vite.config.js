@@ -17,7 +17,6 @@ export default defineConfig({
       // Add more polyfills if needed
     }
   },
-  root: '.',
   build: {
      outDir: 'dist',
     rollupOptions: {
