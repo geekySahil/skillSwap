@@ -41,4 +41,3 @@ SkillSwap is a real-time skill exchange platform that connects people based on t
 
 ```bash
 git clone https://github.com/geekySahil/skillSwap
-cd skill-swap
